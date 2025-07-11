@@ -22,7 +22,31 @@ const Contact = () => {
     e.preventDefault();
     setStatus("loading");
 
+    // Basic frontend validation
+    if (!formData.name || formData.name.length < 2) {
+      setStatus("error");
+      console.error("Name must be at least 2 characters");
+      setTimeout(() => setStatus(null), 5000);
+      return;
+    }
+
+    if (!formData.email || !formData.email.includes('@')) {
+      setStatus("error");
+      console.error("Please enter a valid email");
+      setTimeout(() => setStatus(null), 5000);
+      return;
+    }
+
+    if (!formData.message || formData.message.length < 5) {
+      setStatus("error");
+      console.error("Message must be at least 5 characters");
+      setTimeout(() => setStatus(null), 5000);
+      return;
+    }
+
     try {
+      console.log("📤 Sending form data:", formData);
+      
       const res = await fetch("http://localhost:5000/api/contact", {
         method: "POST",
         headers: { 
@@ -33,6 +57,7 @@ const Contact = () => {
       });
 
       const data = await res.json();
+      console.log("📨 Server response:", data);
 
       if (res.ok) {
         setFormData({ 
@@ -48,13 +73,13 @@ const Contact = () => {
         setTimeout(() => setStatus(null), 5000);
       } else {
         setStatus("error");
+        console.error("❌ Server Error:", data);
         setTimeout(() => setStatus(null), 5000);
-        console.error("Error:", data.error);
       }
     } catch (err) {
       setStatus("error");
+      console.error("❌ Network Error:", err.message);
       setTimeout(() => setStatus(null), 5000);
-      console.error("Error submitting form:", err.message);
     }
   };
 
@@ -64,42 +89,42 @@ const Contact = () => {
   };
 
   return (
-    <section className="py-24 px-6 relative">
+    <section className="py-16 px-6 relative">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <motion.div 
-          className="text-center mb-16"
+          className="text-center mb-12"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 mb-6 rounded-full bg-zinc-800/50 border border-zinc-700">
+          <div className="inline-flex items-center gap-2 px-4 py-2 mb-4 rounded-full bg-zinc-800/50 border border-zinc-700">
             <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
             <span className="text-sm font-medium text-zinc-300">LET'S COLLABORATE</span>
           </div>
           
-          <h2 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-white via-zinc-200 to-zinc-400 bg-clip-text text-transparent">
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-white via-zinc-200 to-zinc-400 bg-clip-text text-transparent">
             Start Your Project
           </h2>
           
-          <p className="text-xl text-zinc-400 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-lg text-zinc-400 max-w-2xl mx-auto leading-relaxed">
             Transform your vision into reality. Let's build something extraordinary together.
           </p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-5 gap-16 items-start">
+        <div className="grid lg:grid-cols-5 gap-12 items-start">
           {/* Contact Info - 2 columns */}
           <motion.div 
-            className="lg:col-span-2 space-y-8"
+            className="lg:col-span-2 space-y-6"
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
             <div>
-              <h3 className="text-2xl font-bold mb-6 text-white">Get In Touch</h3>
-              <p className="text-zinc-400 leading-relaxed mb-8">
+              <h3 className="text-2xl font-bold mb-4 text-white">Get In Touch</h3>
+              <p className="text-zinc-400 leading-relaxed mb-6">
                 Ready to bring your ideas to life? Whether you need a sleek website, 
                 a robust web application, or a complete digital transformation, 
                 I'm here to make it happen.
@@ -107,7 +132,7 @@ const Contact = () => {
             </div>
 
             {/* Contact Methods */}
-            <div className="space-y-6">
+            <div className="space-y-4">
               {[
                 { icon: "📧", label: "Email", value: "sorkhademanthan@gmail.com", href: "mailto:sorkhademanthan@gmail.com" },
                 { icon: "📱", label: "Phone", value: "+91 98765 43210", href: "tel:+919876543210" },
@@ -167,11 +192,11 @@ const Contact = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.4 }}
           >
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-4">
               {/* Name & Email Row */}
-              <div className="grid md:grid-cols-2 gap-6">
+              <div className="grid md:grid-cols-2 gap-4">
                 <div className="relative">
-                  <label className="block text-sm font-semibold text-zinc-300 mb-2">
+                  <label className="block text-sm font-semibold text-zinc-300 mb-1">
                     Full Name *
                   </label>
                   <motion.input
@@ -183,14 +208,14 @@ const Contact = () => {
                     onBlur={() => setFocusedField(null)}
                     variants={inputVariants}
                     animate={focusedField === 'name' ? 'focused' : 'unfocused'}
-                    className="w-full px-4 py-4 bg-zinc-900/50 border border-zinc-700 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-blue-500 transition-colors"
+                    className="w-full px-4 py-3 bg-zinc-900/50 border border-zinc-700 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-blue-500 transition-colors"
                     placeholder="John Doe"
                     required
                   />
                 </div>
                 
                 <div className="relative">
-                  <label className="block text-sm font-semibold text-zinc-300 mb-2">
+                  <label className="block text-sm font-semibold text-zinc-300 mb-1">
                     Email Address *
                   </label>
                   <motion.input
@@ -202,7 +227,7 @@ const Contact = () => {
                     onBlur={() => setFocusedField(null)}
                     variants={inputVariants}
                     animate={focusedField === 'email' ? 'focused' : 'unfocused'}
-                    className="w-full px-4 py-4 bg-zinc-900/50 border border-zinc-700 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-blue-500 transition-colors"
+                    className="w-full px-4 py-3 bg-zinc-900/50 border border-zinc-700 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-blue-500 transition-colors"
                     placeholder="john@company.com"
                     required
                   />
@@ -210,9 +235,9 @@ const Contact = () => {
               </div>
 
               {/* Company & Subject Row */}
-              <div className="grid md:grid-cols-2 gap-6">
+              <div className="grid md:grid-cols-2 gap-4">
                 <div className="relative">
-                  <label className="block text-sm font-semibold text-zinc-300 mb-2">
+                  <label className="block text-sm font-semibold text-zinc-300 mb-1">
                     Company/Organization
                   </label>
                   <motion.input
@@ -224,13 +249,13 @@ const Contact = () => {
                     onBlur={() => setFocusedField(null)}
                     variants={inputVariants}
                     animate={focusedField === 'company' ? 'focused' : 'unfocused'}
-                    className="w-full px-4 py-4 bg-zinc-900/50 border border-zinc-700 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-blue-500 transition-colors"
+                    className="w-full px-4 py-3 bg-zinc-900/50 border border-zinc-700 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-blue-500 transition-colors"
                     placeholder="Company Inc."
                   />
                 </div>
                 
                 <div className="relative">
-                  <label className="block text-sm font-semibold text-zinc-300 mb-2">
+                  <label className="block text-sm font-semibold text-zinc-300 mb-1">
                     Project Type *
                   </label>
                   <motion.select
@@ -241,7 +266,7 @@ const Contact = () => {
                     onBlur={() => setFocusedField(null)}
                     variants={inputVariants}
                     animate={focusedField === 'subject' ? 'focused' : 'unfocused'}
-                    className="w-full px-4 py-4 bg-zinc-900/50 border border-zinc-700 rounded-xl text-white focus:outline-none focus:border-blue-500 transition-colors"
+                    className="w-full px-4 py-3 bg-zinc-900/50 border border-zinc-700 rounded-xl text-white focus:outline-none focus:border-blue-500 transition-colors"
                     required
                   >
                     <option value="">Select project type</option>
@@ -256,9 +281,9 @@ const Contact = () => {
               </div>
 
               {/* Budget & Timeline Row */}
-              <div className="grid md:grid-cols-2 gap-6">
+              <div className="grid md:grid-cols-2 gap-4">
                 <div className="relative">
-                  <label className="block text-sm font-semibold text-zinc-300 mb-2">
+                  <label className="block text-sm font-semibold text-zinc-300 mb-1">
                     Budget Range
                   </label>
                   <motion.select
@@ -269,7 +294,7 @@ const Contact = () => {
                     onBlur={() => setFocusedField(null)}
                     variants={inputVariants}
                     animate={focusedField === 'budget' ? 'focused' : 'unfocused'}
-                    className="w-full px-4 py-4 bg-zinc-900/50 border border-zinc-700 rounded-xl text-white focus:outline-none focus:border-blue-500 transition-colors"
+                    className="w-full px-4 py-3 bg-zinc-900/50 border border-zinc-700 rounded-xl text-white focus:outline-none focus:border-blue-500 transition-colors"
                   >
                     <option value="">Select budget range</option>
                     <option value="Under $5k">Under $5,000</option>
@@ -281,7 +306,7 @@ const Contact = () => {
                 </div>
                 
                 <div className="relative">
-                  <label className="block text-sm font-semibold text-zinc-300 mb-2">
+                  <label className="block text-sm font-semibold text-zinc-300 mb-1">
                     Timeline
                   </label>
                   <motion.select
@@ -292,7 +317,7 @@ const Contact = () => {
                     onBlur={() => setFocusedField(null)}
                     variants={inputVariants}
                     animate={focusedField === 'timeline' ? 'focused' : 'unfocused'}
-                    className="w-full px-4 py-4 bg-zinc-900/50 border border-zinc-700 rounded-xl text-white focus:outline-none focus:border-blue-500 transition-colors"
+                    className="w-full px-4 py-3 bg-zinc-900/50 border border-zinc-700 rounded-xl text-white focus:outline-none focus:border-blue-500 transition-colors"
                   >
                     <option value="">Select timeline</option>
                     <option value="ASAP">ASAP</option>
@@ -306,7 +331,7 @@ const Contact = () => {
 
               {/* Message */}
               <div className="relative">
-                <label className="block text-sm font-semibold text-zinc-300 mb-2">
+                <label className="block text-sm font-semibold text-zinc-300 mb-1">
                   Project Description *
                 </label>
                 <motion.textarea
@@ -317,8 +342,8 @@ const Contact = () => {
                   onBlur={() => setFocusedField(null)}
                   variants={inputVariants}
                   animate={focusedField === 'message' ? 'focused' : 'unfocused'}
-                  rows={6}
-                  className="w-full px-4 py-4 bg-zinc-900/50 border border-zinc-700 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-blue-500 transition-colors resize-none"
+                  rows={5}
+                  className="w-full px-4 py-3 bg-zinc-900/50 border border-zinc-700 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-blue-500 transition-colors resize-none"
                   placeholder="Tell me about your project, goals, and any specific requirements..."
                   required
                 />
@@ -328,9 +353,9 @@ const Contact = () => {
               <motion.button
                 type="submit"
                 disabled={status === "loading"}
-                className="w-full py-4 px-8 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl"
-                whileHover={{ scale: status === "loading" ? 1 : 1.02 }}
-                whileTap={{ scale: status === "loading" ? 1 : 0.98 }}
+                className="w-full py-3 px-6 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl"
+                whileHover={{ scale: status === "loading" ? 1 : 1.01 }}
+                whileTap={{ scale: status === "loading" ? 1 : 0.99 }}
               >
                 {status === "loading" ? (
                   <div className="flex items-center justify-center gap-2">

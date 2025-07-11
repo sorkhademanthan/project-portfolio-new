@@ -32,19 +32,19 @@ function App() {
         </section>
         
         {/* Clean section divider */}
-        <div className="w-full h-px my-20 bg-gradient-to-r from-transparent via-zinc-700 to-transparent" />
+        <div className="w-full h-px my-12 bg-gradient-to-r from-transparent via-zinc-700 to-transparent" />
 
         <section id="about">
           <About />
         </section>
 
-        <div className="w-full h-px my-20 bg-gradient-to-r from-transparent via-zinc-700 to-transparent" />
+        <div className="w-full h-px my-12 bg-gradient-to-r from-transparent via-zinc-700 to-transparent" />
 
         <section id="projects">
           <Projects />
         </section>
 
-        <div className="w-full h-px my-20 bg-gradient-to-r from-transparent via-zinc-700 to-transparent" />
+        <div className="w-full h-px my-12 bg-gradient-to-r from-transparent via-zinc-700 to-transparent" />
 
         <section id="contact">
           <Contact />

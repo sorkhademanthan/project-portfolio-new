@@ -15,7 +15,7 @@ const fadeInUp = {
 
 const About = () => {
   return (
-    <section className="">
+    <section className="py-16 px-6 relative">
       {/* Background glow */}
       <div className="absolute inset-0">
         <div
@@ -29,14 +29,14 @@ const About = () => {
         />
       </div>
 
-      <div className="relative z-10 max-w-4xl mx-auto text-center space-y-12">
+      <div className="relative z-10 max-w-4xl mx-auto text-center space-y-8">
         {/* Title */}
         <motion.h2
           variants={fadeInUp}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="text-5xl md:text-6xl font-light tracking-tight"
+          className="text-4xl md:text-5xl font-light tracking-tight"
           style={{
             fontFamily: "'Inter', sans-serif",
             background: "linear-gradient(135deg, #ffffff 0%, #a1a1aa 100%)",
@@ -55,7 +55,7 @@ const About = () => {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="text-xl text-zinc-300 leading-relaxed"
+          className="text-lg text-zinc-300 leading-relaxed"
         >
           Most websites look good but fail to convert. Why?
           <span className="text-white font-medium">
@@ -70,7 +70,7 @@ const About = () => {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="text-lg text-zinc-400 leading-relaxed"
+          className="text-base text-zinc-400 leading-relaxed"
         >
           I blend clean frontend architecture with consumer psychology to build interfaces that connect, guide, and convert.
         </motion.p>
