@@ -8,4 +8,7 @@ export default {
     extend: {},
   },
   plugins: [],
+  corePlugins: {
+    scrollBehavior: true, // optional, but good practice
+  },
 }
