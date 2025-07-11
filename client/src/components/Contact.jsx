@@ -4,7 +4,7 @@ import { useState } from "react";
 const Contact = () => {
   const [formData, setFormData] = useState({ 
     name: "", 
-    email: "", 
+    email: "",
     company: "", 
     subject: "", 
     message: "",
@@ -32,53 +32,45 @@ const Contact = () => {
 
     if (!formData.email || !formData.email.includes('@')) {
       setStatus("error");
-      console.error("Please enter a valid email");
+      console.error("Valid email is required");
       setTimeout(() => setStatus(null), 5000);
       return;
     }
 
-    if (!formData.message || formData.message.length < 5) {
+    if (!formData.message || formData.message.length < 10) {
       setStatus("error");
-      console.error("Message must be at least 5 characters");
+      console.error("Message must be at least 10 characters");
       setTimeout(() => setStatus(null), 5000);
       return;
     }
 
     try {
-      console.log("📤 Sending form data:", formData);
-      
-      const res = await fetch("http://localhost:5000/api/contact", {
+      const response = await fetch("/api/contact", {
         method: "POST",
-        headers: { 
+        headers: {
           "Content-Type": "application/json",
-          "Accept": "application/json"
         },
         body: JSON.stringify(formData),
       });
 
-      const data = await res.json();
-      console.log("📨 Server response:", data);
-
-      if (res.ok) {
+      if (response.ok) {
+        setStatus("success");
         setFormData({ 
           name: "", 
-          email: "", 
+          email: "",
           company: "", 
           subject: "", 
           message: "",
           budget: "",
           timeline: ""
         });
-        setStatus("success");
-        setTimeout(() => setStatus(null), 5000);
+        setTimeout(() => setStatus(null), 10000);
       } else {
-        setStatus("error");
-        console.error("❌ Server Error:", data);
-        setTimeout(() => setStatus(null), 5000);
+        throw new Error("Failed to send message");
       }
-    } catch (err) {
+    } catch (error) {
+      console.error("Error sending message:", error);
       setStatus("error");
-      console.error("❌ Network Error:", err.message);
       setTimeout(() => setStatus(null), 5000);
     }
   };
@@ -135,7 +127,7 @@ const Contact = () => {
             <div className="space-y-4">
               {[
                 { icon: "📧", label: "Email", value: "sorkhademanthan@gmail.com", href: "mailto:sorkhademanthan@gmail.com" },
-                { icon: "📱", label: "Phone", value: "+91 98765 43210", href: "tel:+919876543210" },
+                { icon: "📱", label: "Phone", value: "+91 8454898626", href: "tel:+918454898626" },
                 { icon: "🌍", label: "Location", value: "Mumbai, India", href: null },
                 { icon: "⚡", label: "Response Time", value: "Within 24 hours", href: null }
               ].map((item, index) => (
@@ -149,7 +141,18 @@ const Contact = () => {
                   <div>
                     <p className="text-sm text-zinc-500 font-medium">{item.label}</p>
                     {item.href ? (
-                      <a href={item.href} className="text-white hover:text-blue-400 transition-colors">
+                      <a 
+                        href={item.href} 
+                        className="text-white hover:text-blue-400 transition-colors cursor-pointer font-medium"
+                        onClick={() => {
+                          // Ensure the link works properly
+                          if (item.href.startsWith('mailto:')) {
+                            window.location.href = item.href;
+                          } else if (item.href.startsWith('tel:')) {
+                            window.location.href = item.href;
+                          }
+                        }}
+                      >
                         {item.value}
                       </a>
                     ) : (
@@ -165,17 +168,20 @@ const Contact = () => {
               <h4 className="text-lg font-semibold mb-4 text-white">Follow Me</h4>
               <div className="flex gap-4">
                 {[
-                  { name: "LinkedIn", href: "#", icon: "💼" },
-                  { name: "GitHub", href: "#", icon: "🐙" },
-                  { name: "Twitter", href: "#", icon: "🐦" },
-                  { name: "Portfolio", href: "#", icon: "�" }
+                  { name: "Instagram", href: "https://instagram.com/manthan_sorkhade", icon: "📷" },
+                  { name: "LinkedIn", href: "https://linkedin.com/in/manthansorkhade", icon: "💼" },
+                  { name: "X (Twitter)", href: "https://twitter.com/manthan_dev", icon: "🐦" },
+                  { name: "Upwork", href: "https://upwork.com/freelancers/manthansorkhade", icon: "💚" }
                 ].map((social, index) => (
                   <motion.a
                     key={index}
                     href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="w-12 h-12 bg-zinc-800/50 border border-zinc-700 rounded-xl flex items-center justify-center text-xl hover:bg-zinc-700/50 hover:border-zinc-600 transition-colors"
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.95 }}
+                    title={social.name}
                   >
                     {social.icon}
                   </motion.a>
@@ -398,5 +404,5 @@ const Contact = () => {
     </section>
   );
 };
-         
+
 export default Contact;
