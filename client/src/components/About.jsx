@@ -19,6 +19,17 @@ const About = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.3 });
 
+  // Navigation function
+  const scrollToSection = (sectionId) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+  };
+
   const metrics = [
     { number: "50+", label: "Projects Delivered", description: "From startups to enterprise" },
     { number: "99%", label: "Client Satisfaction", description: "Obsessed with quality" },
@@ -212,9 +223,10 @@ const About = () => {
             Let's turn your vision into a high-converting digital experience that your users will love and your competitors will envy.
           </p>
           <motion.button
+            onClick={() => scrollToSection('contact')}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold rounded-full transition-all duration-300 shadow-lg hover:shadow-xl"
+            className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold rounded-full transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer"
           >
             Let's Start Your Project
           </motion.button>

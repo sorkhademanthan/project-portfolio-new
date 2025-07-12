@@ -55,10 +55,10 @@ const Footer = () => {
             className="flex gap-4"
           >
             {[
-              { name: "Instagram", href: "https://instagram.com/manthan_sorkhade", icon: "📷" },
-              { name: "LinkedIn", href: "https://linkedin.com/in/manthansorkhade", icon: "💼" },
-              { name: "X (Twitter)", href: "https://twitter.com/manthan_dev", icon: "🐦" },
-              { name: "Upwork", href: "https://upwork.com/freelancers/manthansorkhade", icon: "💚" }
+              { name: "Instagram", href: "https://instagram.com/manthan_sorkhade", icon: <i className="fab fa-instagram"></i> },
+              { name: "LinkedIn", href: "https://linkedin.com/in/manthansorkhade",icon: <i className="fab fa-linkedin-in"></i> },
+              { name: "X (Twitter)", href: "https://twitter.com/manthan_dev", icon: <i className="fab fa-x-twitter"></i> },
+              { name: "Upwork", href: "https://upwork.com/freelancers/manthansorkhade", icon: <i className="fab fa-upwork"></i> }
             ].map((social) => (
               <a
                 key={social.name}
