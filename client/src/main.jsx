@@ -5,17 +5,14 @@ import './index.css'
 // Lazy load App component for code splitting
 const App = lazy(() => import('./App.jsx'))
 
-// Loading component
+// Ultra-lightweight loading component for mobile
 const LoadingFallback = () => (
   <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
-    <div className="relative">
-      <div className="w-16 h-16 border-4 border-zinc-800 border-t-blue-500 rounded-full animate-spin"></div>
-      <div className="absolute inset-0 w-16 h-16 border-4 border-transparent border-t-purple-500 rounded-full animate-spin" style={{ animationDelay: '0.5s', animationDuration: '1.5s' }}></div>
-    </div>
+    <div className="w-8 h-8 border-2 border-zinc-800 border-t-blue-500 rounded-full animate-spin"></div>
   </div>
 )
 
-// Optimized render with concurrent features
+// Optimized render
 const root = ReactDOM.createRoot(document.getElementById('root'))
 
 root.render(
@@ -39,6 +36,7 @@ if (typeof window !== 'undefined') {
     img.src = src
   })
 }
+
 if (typeof window !== 'undefined') {
   // Preload critical images
   const criticalImages = [

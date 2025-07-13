@@ -22,6 +22,9 @@ export default {
       backdropBlur: {
         xs: '2px',
       },
+      screens: {
+        'xs': '475px',
+      },
     },
   },
   plugins: [],
@@ -35,4 +38,8 @@ export default {
     'blur-xs',
     'backdrop-blur-xs',
   ],
+  // Optimize for mobile performance
+  experimental: {
+    optimizeUniversalDefaults: true,
+  },
 }

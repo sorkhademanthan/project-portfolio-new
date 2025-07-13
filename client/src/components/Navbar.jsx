@@ -8,23 +8,23 @@ const Navbar = () => {
   const navLinks = ["Home", "About", "Projects", "Contact"];
 
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 backdrop-blur-xl bg-zinc-950/60">
-      <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-        {/* Brand */}
-        <div className="text-2xl font-semibold text-white tracking-tight" style={{ fontFamily: "'Inter', sans-serif" }}>
+    <nav className="fixed top-0 left-0 w-full z-50 backdrop-blur-sm bg-zinc-950/80 border-b border-zinc-800/30">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-center">
+        {/* Brand - Optimized for mobile */}
+        <div className="text-xl sm:text-2xl font-semibold text-white tracking-tight select-none">
           Manthan
         </div>
 
-        {/* Desktop Links */}
-        <ul className="hidden md:flex space-x-10 text-sm font-medium tracking-wide">
+        {/* Desktop Links - Hidden on mobile */}
+        <ul className="hidden md:flex space-x-8 lg:space-x-10 text-sm font-medium tracking-wide">
           {navLinks.map((link) => (
             <li key={link}>
               <ScrollLink
                 to={link.toLowerCase()}
                 smooth={true}
-                duration={700}
+                duration={500}
                 offset={-80}
-                className="cursor-pointer text-zinc-400 hover:text-white transition-all duration-200"
+                className="cursor-pointer text-zinc-400 hover:text-white transition-colors duration-200 py-2 px-1"
               >
                 {link}
               </ScrollLink>
@@ -32,38 +32,36 @@ const Navbar = () => {
           ))}
         </ul>
 
-        {/* Hamburger */}
-        <div
-          className="md:hidden text-2xl text-zinc-400 cursor-pointer"
+        {/* Mobile Hamburger - Larger touch target */}
+        <button
+          className="md:hidden w-10 h-10 flex items-center justify-center text-zinc-400 hover:text-white transition-colors"
           onClick={() => setIsOpen(!isOpen)}
+          aria-label="Toggle menu"
         >
-          {isOpen ? "✖" : "☰"}
-        </div>
+          <span className="text-xl">{isOpen ? "✖" : "☰"}</span>
+        </button>
       </div>
 
-      {/* Mobile Dropdown */}
+      {/* Mobile Menu - Optimized for performance */}
       {isOpen && (
-        <motion.ul
-          initial={{ y: -10, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.3 }}
-          className="md:hidden flex flex-col gap-4 px-6 pb-4 bg-zinc-900/90 backdrop-blur-lg text-sm border-t border-zinc-800/50"
-        >
-          {navLinks.map((link) => (
-            <li key={link}>
-              <ScrollLink
-                to={link.toLowerCase()}
-                smooth={true}
-                duration={700}
-                offset={-80}
-                onClick={() => setIsOpen(false)}
-                className="cursor-pointer text-zinc-400 hover:text-white transition-all duration-200 py-2"
-              >
-                {link}
-              </ScrollLink>
-            </li>
-          ))}
-        </motion.ul>
+        <div className="md:hidden bg-zinc-900/95 backdrop-blur-md border-t border-zinc-800/50">
+          <ul className="flex flex-col px-4 py-2">
+            {navLinks.map((link) => (
+              <li key={link}>
+                <ScrollLink
+                  to={link.toLowerCase()}
+                  smooth={true}
+                  duration={500}
+                  offset={-80}
+                  onClick={() => setIsOpen(false)}
+                  className="block cursor-pointer text-zinc-300 hover:text-white transition-colors duration-200 py-3 px-2 text-base border-b border-zinc-800/30 last:border-b-0"
+                >
+                  {link}
+                </ScrollLink>
+              </li>
+            ))}
+          </ul>
+        </div>
       )}
     </nav>
   );

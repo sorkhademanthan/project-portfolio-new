@@ -9,8 +9,9 @@ export default defineConfig({
   ],
 
   build: {
-    target: 'esnext',
+    target: 'es2018', // Better mobile compatibility
     minify: 'terser',
+    cssMinify: 'esbuild',
 
     rollupOptions: {
       output: {
@@ -19,21 +20,23 @@ export default defineConfig({
           motion: ['framer-motion'],
           utils: ['react-scroll']
         },
-        chunkFileNames: 'assets/js/[name]-[hash].js',
-        entryFileNames: 'assets/js/[name]-[hash].js',
-        assetFileNames: 'assets/[ext]/[name]-[hash].[ext]'
+        chunkFileNames: 'js/[name]-[hash].js',
+        entryFileNames: 'js/[name]-[hash].js',
+        assetFileNames: '[ext]/[name]-[hash].[ext]'
       }
     },
 
-    chunkSizeWarningLimit: 1000,
+    chunkSizeWarningLimit: 500, // Stricter limit for mobile
     sourcemap: false,
 
     terserOptions: {
       compress: {
         drop_console: true,
         drop_debugger: true,
-        pure_funcs: ['console.log'],
-        passes: 2
+        pure_funcs: ['console.log', 'console.info'],
+        passes: 3, // More aggressive compression
+        unsafe_arrows: true,
+        unsafe_methods: true,
       },
       mangle: {
         safari10: true
@@ -45,26 +48,25 @@ export default defineConfig({
   },
 
   server: {
-    proxy: {
-      '/api': {
-        target: 'http://localhost:5000',
-        changeOrigin: true,
-      },
-    },
     hmr: {
       overlay: false
     }
   },
 
   css: {
-    devSourcemap: false
+    devSourcemap: false,
+    preprocessorOptions: {
+      css: {
+        charset: false
+      }
+    }
   },
 
   assetsInclude: ['**/*.webp', '**/*.avif'],
 
   optimizeDeps: {
-    include: ['react', 'react-dom', 'framer-motion'],
-    exclude: ['@vite/client', '@vite/env']
+    include: ['react', 'react-dom'],
+    exclude: ['@vite/client', '@vite/env', 'framer-motion']
   },
 
   preview: {
