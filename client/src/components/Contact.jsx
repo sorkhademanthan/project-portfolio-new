@@ -94,7 +94,7 @@ const Contact = () => {
       } else {
         throw new Error("Failed to send message");
       }
-    } catch (error) {
+    } catch {
       setStatus("error");
       setTimeout(() => setStatus(null), 5000);
     }
@@ -143,18 +143,16 @@ const Contact = () => {
 
   const inputVariants = useMemo(() => ({
     focused: { 
-      scale: prefersReducedMotion ? 1 : (isMobile ? 1.005 : 1.01), 
       borderColor: "#3b82f6",
-      boxShadow: prefersReducedMotion ? "none" : "0 0 0 3px rgba(59, 130, 246, 0.1)",
+      boxShadow: "0 0 0 2px rgba(59, 130, 246, 0.2)",
       transition: { duration: 0.2 }
     },
     unfocused: { 
-      scale: 1, 
       borderColor: "#52525b",
       boxShadow: "0 0 0 0px rgba(59, 130, 246, 0)",
       transition: { duration: 0.2 }
     }
-  }), [prefersReducedMotion, isMobile]);
+  }), []);
 
   return (
     <section 
@@ -256,7 +254,7 @@ const Contact = () => {
 
             {/* Optimized Contact Methods */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3">
-              {contactMethods.map((item, index) => (
+              {contactMethods.map((item) => (
                 <motion.div 
                   key={item.label}
                   className="flex items-center gap-3 p-3 rounded-xl bg-zinc-900/30 border border-zinc-800/50 hover:border-zinc-700/50 transition-colors duration-300 will-change-transform"
@@ -285,7 +283,7 @@ const Contact = () => {
             <div>
               <h4 className="text-base font-semibold mb-3 text-white">Follow Me</h4>
               <div className="flex flex-wrap gap-3">
-                {socialLinks.map((social, index) => (
+                {socialLinks.map((social) => (
                   <motion.a
                     key={social.name}
                     href={social.href}
@@ -521,4 +519,3 @@ const Contact = () => {
 };
 
 export default Contact;
-                 

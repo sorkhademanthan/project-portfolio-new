@@ -36,19 +36,3 @@ if (typeof window !== 'undefined') {
     img.src = src
   })
 }
-
-if (typeof window !== 'undefined') {
-  // Preload critical images
-  const criticalImages = [
-    '/assets/doctor-appointment.png',
-    '/assets/ai-dashboard.jpg'
-  ]
-  
-  criticalImages.forEach(src => {
-    const link = document.createElement('link')
-    link.rel = 'preload'
-    link.as = 'image'
-    link.href = src
-    document.head.appendChild(link)
-  })
-}

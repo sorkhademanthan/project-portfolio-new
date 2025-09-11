@@ -1,237 +1,271 @@
-import { motion } from "framer-motion";
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
+import PropTypes from "prop-types";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+    FaGithub,
+    FaExternalLinkAlt,
+    FaTimes,
+    FaArrowRight,
+} from "react-icons/fa";
 
-// Clean, minimal project data
+// --- DATA ---
 const projects = [
-	{
-		id: 1,
-		title: "MediFlow Pro",
-		subtitle: "Healthcare Innovation Platform",
-		description:
-			"Revolutionary doctor appointment ecosystem with AI-powered scheduling, real-time analytics, and seamless multi-role management.",
-		tags: ["React", "Node.js", "MongoDB", "AI/ML", "REST API"],
-		image:
-			"https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=800&h=600&fit=crop&crop=center",
-		link: "https://manthansorkhade.framer.website/",
-		github: "https://github.com/sorkhademanthan/Edunet-Foodie/",
-		category: "Healthcare",
-		status: "Live",
-		featured: true,
-	},
-	{
-		id: 2,
-		title: "NeuralTask AI",
-		subtitle: "Next-Gen Productivity Suite",
-		description:
-			"Enterprise-grade SaaS platform leveraging OpenAI's latest models for intelligent task management and workflow optimization.",
-		image:
-			"https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=600&fit=crop&crop=center",
-		tags: ["MERN Stack", "OpenAI GPT-4", "WebSocket", "AWS"],
-		link: "https://manthansorkhade.framer.website/",
-		github: "https://github.com/sorkhademanthan/firstrepo-demo/",
-		category: "AI/SaaS",
-		status: "MVP",
-		featured: true,
-	},
-	{
-		id: 3,
-		title: "Notion Reimagined",
-		subtitle: "Collaborative Workspace 2.0",
-		description:
-			"Next-generation productivity platform with real-time collaboration and intelligent content organization.",
-		tags: ["React", "TypeScript", "Supabase", "Real-time"],
-		image:
-			"https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=800&h=600&fit=crop&crop=center",
-		link: "https://manthansorkhade.framer.website/",
-		github: "https://github.com/sorkhademanthan/portfolio-app/",
-		category: "Productivity",
-		status: "Beta",
-		featured: false,
-	},
-	{
-		id: 4,
-		title: "ContentFlow CMS",
-		subtitle: "Headless Publishing Platform",
-		description:
-			"Modern content management system with headless architecture and intelligent SEO optimization.",
-		image:
-			"https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&fit=crop&crop=center",
-		tags: ["Next.js 14", "Sanity.io", "TypeScript", "Vercel"],
-		link: "https://manthansorkhade.framer.website/",
-		github: "https://github.com/sorkhademanthan/blog-cms-demo/",
-		category: "CMS",
-		status: "Live",
-		featured: false,
-	},
+    {
+        id: 1,
+        title: "TINTD",
+        description: "A luxury streetwear brand where minimalist silhouettes are viewed through a sophisticated lens of color.",
+        tags: ["React", "Node.js", "MongoDB", "AI/ML", "Express"],
+        image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=800&h=600&fit=crop&crop=center",
+        link: "https://manthansorkhade.framer.website/",
+        github: "https://github.com/sorkhademanthan/Edunet-Foodie/",
+        category: "Healthcare",
+        featured: true,
+    },
+    {
+        id: 2,
+        title: "NeuralTask AI",
+        description: "Developed an enterprise SaaS solution with OpenAI's GPT-4, automating complex workflows and boosting team productivity.",
+        image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=600&fit=crop&crop=center",
+        tags: ["MERN Stack", "OpenAI GPT-4", "AWS"],
+        link: "https://manthansorkhade.framer.website/",
+        github: "https://github.com/sorkhademanthan/firstrepo-demo/",
+        category: "AI/SaaS",
+        featured: true,
+    },
+    {
+        id: 3,
+        title: "Notion Reimagined",
+        description: "Built a real-time collaborative workspace inspired by Notion, featuring intelligent content organization and seamless editing.",
+        tags: ["React", "TypeScript", "Supabase", "Real-time"],
+        image: "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=800&h=600&fit=crop&crop=center",
+        link: "https://manthansorkhade.framer.website/",
+        github: "https://github.com/sorkhademanthan/portfolio-app/",
+        category: "Productivity",
+        featured: false,
+    },
+    {
+        id: 4,
+        title: "ContentFlow CMS",
+        description: "Created a high-performance headless CMS with Next.js 14, enabling teams to publish content twice as fast.",
+        image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&fit=crop&crop=center",
+        tags: ["Next.js 14", "Sanity.io", "Vercel"],
+        link: "https://manthansorkhade.framer.website/",
+        github: "https://github.com/sorkhademanthan/blog-cms-demo/",
+        category: "CMS",
+        featured: false,
+    },
 ];
 
-const Projects = () => {
-	const [activeFilter, setActiveFilter] = useState("all");
+// --- CHILD COMPONENTS ---
 
-	// Memoize categories to prevent re-renders
-	const categories = useMemo(
-		() => ["all", "Healthcare", "AI/SaaS", "Productivity", "CMS"],
-		[]
-	);
+// 1. Project Modal Component (with staggered content animation)
+const ProjectModal = ({ project, onClose }) => {
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (e.key === "Escape") onClose();
+        };
+        document.addEventListener("keydown", handleKeyDown);
+        return () => document.removeEventListener("keydown", handleKeyDown);
+    }, [onClose]);
 
-	const filteredProjects = useMemo(
-		() =>
-			activeFilter === "all"
-				? projects
-				: projects.filter((project) => project.category === activeFilter),
-		[activeFilter]
-	);
+    const modalVariants = {
+        hidden: { y: 30, opacity: 0 },
+        visible: { y: 0, opacity: 1, transition: { duration: 0.4, ease: "easeOut" } },
+        exit: { y: 30, opacity: 0, transition: { duration: 0.3, ease: "easeIn" } },
+    };
 
-	return (
-		<section className="py-12 sm:py-16 px-4 sm:px-6">
-			<div className="max-w-7xl mx-auto">
-				{/* Simplified header for mobile */}
-				<div className="text-center mb-8 sm:mb-12">
-					<div className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 mb-3 sm:mb-4 rounded-full bg-zinc-800/50 border border-zinc-700">
-						<div className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
-						<span className="text-xs sm:text-sm font-medium text-zinc-300">
-							FEATURED WORK
-						</span>
-					</div>
+    // ✨ NEW: Variants for staggering content
+    const contentContainerVariants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.1, // This creates the sequential animation effect
+            },
+        },
+    };
 
-					<h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4 bg-gradient-to-r from-white via-zinc-200 to-zinc-400 bg-clip-text text-transparent">
-						Selected Projects
-					</h2>
+    const contentItemVariants = {
+        hidden: { y: 10, opacity: 0 },
+        visible: { y: 0, opacity: 1, transition: { duration: 0.3 } },
+    };
 
-					<p className="text-sm sm:text-base lg:text-lg text-zinc-400 max-w-2xl mx-auto leading-relaxed">
-						Crafting digital experiences that merge innovation with
-						functionality
-					</p>
-				</div>
-
-				{/* Mobile-optimized filter tabs */}
-				<div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-8 sm:mb-12">
-					{categories.map((category) => (
-						<button
-							key={category}
-							onClick={() => setActiveFilter(category)}
-							className={`px-3 sm:px-6 py-2 sm:py-3 rounded-full text-xs sm:text-sm font-medium transition-all duration-300 ${
-								activeFilter === category
-									? "bg-white text-zinc-900 shadow-lg"
-									: "bg-zinc-800/50 text-zinc-400 hover:bg-zinc-700/50 hover:text-zinc-300"
-							}`}
-						>
-							{category === "all" ? "All" : category}
-						</button>
-					))}
-				</div>
-
-				{/* Mobile-first project grid */}
-				<div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
-					{filteredProjects.map((project, index) => (
-						<div
-							key={project.id}
-							className="bg-zinc-900/50 backdrop-blur-sm border border-zinc-800 rounded-2xl overflow-hidden hover:border-zinc-700 transition-all duration-300"
-						>
-							{/* Optimized image container */}
-							<div className="relative overflow-hidden">
-								<img
-									src={project.image}
-									alt={project.title}
-									className="w-full h-48 sm:h-56 lg:h-64 object-cover transition-transform duration-500 hover:scale-105"
-									loading={index < 2 ? "eager" : "lazy"}
-									decoding="async"
-									onError={(e) => {
-										e.target.src =
-											"https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&h=600&fit=crop&crop=center";
-									}}
-								/>
-
-								{/* Simplified badges for mobile */}
-								<div className="absolute top-3 left-3">
-									<span
-										className={`px-2 py-1 text-xs font-semibold rounded-full ${
-											project.status === "Live"
-												? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
-												: project.status === "MVP"
-												? "bg-blue-500/20 text-blue-300 border border-blue-500/30"
-												: "bg-yellow-500/20 text-yellow-300 border border-yellow-500/30"
-										}`}
-									>
-										{project.status}
-									</span>
-								</div>
-
-								<div className="absolute top-3 right-3">
-									<span className="px-2 py-1 text-xs font-medium rounded-full bg-zinc-800/80 text-zinc-300 border border-zinc-700/50 backdrop-blur-sm">
-										{project.category}
-									</span>
-								</div>
-
-								{project.featured && (
-									<div className="absolute bottom-3 left-3">
-										<span className="px-2 py-1 text-xs font-bold rounded-full bg-gradient-to-r from-yellow-400/20 to-orange-400/20 text-yellow-300 border border-yellow-400/30">
-											⭐ FEATURED
-										</span>
-									</div>
-								)}
-							</div>
-
-							{/* Optimized content */}
-							<div className="p-4 sm:p-6 lg:p-8">
-								<div className="mb-3 sm:mb-4">
-									<h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-1 sm:mb-2">
-										{project.title}
-									</h3>
-									<p className="text-blue-400 font-medium text-sm sm:text-base">
-										{project.subtitle}
-									</p>
-								</div>
-
-								<p className="text-zinc-400 leading-relaxed mb-4 sm:mb-6 text-sm sm:text-base">
-									{project.description}
-								</p>
-
-								{/* Simplified tech stack for mobile */}
-								<div className="flex flex-wrap gap-1.5 sm:gap-2 mb-6 sm:mb-8">
-									{project.tags.slice(0, 4).map((tag, i) => (
-										<span
-											key={i}
-											className="px-2 sm:px-3 py-1 text-xs sm:text-sm bg-zinc-800 text-zinc-300 rounded-lg border border-zinc-700"
-										>
-											{tag}
-										</span>
-									))}
-									{project.tags.length > 4 && (
-										<span className="px-2 sm:px-3 py-1 text-xs sm:text-sm bg-zinc-800 text-zinc-400 rounded-lg border border-zinc-700">
-											+{project.tags.length - 4}
-										</span>
-									)}
-								</div>
-
-								{/* Mobile-optimized buttons */}
-								<div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-									<a
-										href={project.link}
-										target="_blank"
-										rel="noopener noreferrer"
-										className="flex-1 bg-white text-zinc-900 text-center py-2.5 sm:py-3 px-4 sm:px-6 rounded-xl font-semibold hover:bg-zinc-100 transition-colors duration-200 text-sm sm:text-base"
-									>
-										View Live
-									</a>
-									<a
-										href={project.github}
-										target="_blank"
-										rel="noopener noreferrer"
-										className="flex-1 bg-zinc-800 text-zinc-300 text-center py-2.5 sm:py-3 px-4 sm:px-6 rounded-xl font-semibold border border-zinc-700 hover:bg-zinc-700 hover:text-white transition-colors duration-200 text-sm sm:text-base"
-									>
-										Source Code
-									</a>
-								</div>
-							</div>
-						</div>
-					))}
-				</div>
-			</div>
-		</section>
-	);
+    return (
+        <AnimatePresence>
+            {project && (
+                <motion.div
+                    className="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center z-50 p-4"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    onClick={onClose}
+                >
+                    <motion.div
+                        className="bg-zinc-900 border border-zinc-700/60 rounded-xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto"
+                        variants={modalVariants}
+                        initial="hidden"
+                        animate="visible"
+                        exit="exit"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className="relative">
+                            <img src={project.image} alt={project.title} className="w-full h-64 md:h-80 object-cover" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 to-transparent" />
+                            <button onClick={onClose} className="absolute top-4 right-4 text-zinc-400 hover:text-white bg-black/50 rounded-full p-2 transition-all" aria-label="Close project details">
+                                <FaTimes size={20} />
+                            </button>
+                        </div>
+                        
+                        {/* ✨ NEW: Wrap content in a motion.div for staggering */}
+                        <motion.div 
+                            className="p-6 md:p-8"
+                            variants={contentContainerVariants}
+                            initial="hidden"
+                            animate="visible"
+                        >
+                            <motion.h2 variants={contentItemVariants} className="text-3xl md:text-4xl font-bold text-white mb-2">{project.title}</motion.h2>
+                            <motion.p variants={contentItemVariants} className="text-zinc-300 text-base md:text-lg leading-relaxed mb-6">{project.description}</motion.p>
+                            
+                            <motion.div variants={contentItemVariants} className="flex flex-wrap gap-2 mb-8">
+                                {project.tags.map((tag) => (
+                                    <span key={tag} className="px-3 py-1 text-xs font-medium text-sky-300 bg-sky-900/50 border border-sky-500/30 rounded-full">
+                                        {tag}
+                                    </span>
+                                ))}
+                            </motion.div>
+                            
+                            <motion.div variants={contentItemVariants} className="flex flex-col sm:flex-row items-center gap-4">
+                                <a href={project.link} target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 bg-white text-zinc-900 rounded-full font-semibold text-sm shadow-lg hover:bg-zinc-200 transition-all transform hover:scale-105">
+                                    View Live Project <FaExternalLinkAlt />
+                                </a>
+                                <a href={project.github} target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 text-zinc-300 rounded-full font-semibold text-sm hover:bg-zinc-800 transition-colors transform hover:scale-105">
+                                    <FaGithub /> View on GitHub
+                                </a>
+                            </motion.div>
+                        </motion.div>
+                    </motion.div>
+                </motion.div>
+            )}
+        </AnimatePresence>
+    );
 };
 
-export default Projects;
-	
+// 2. Project Card Component (with enhanced hover effects)
+const ProjectCard = React.memo(({ project, onCardClick }) => {
+    return (
+        <motion.div
+            layout
+            initial={{ opacity: 0, y: 20, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+            onClick={() => onCardClick(project)}
+            // Added perspective for 3D effect on children
+            className="group relative h-[450px] rounded-xl overflow-hidden cursor-pointer"
+            style={{ perspective: "1000px" }}
+        >
+            {/* --- Animated Glowing Border --- */}
+            <div className="absolute inset-0 z-0 transition-all duration-500 opacity-0 group-hover:opacity-100 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-500/40 to-transparent blur-2xl" />
+            
+            <motion.div 
+                // Added subtle 3D rotation on hover
+                whileHover={{ rotateY: 5, transition: { duration: 0.3 } }}
+                className="relative z-10 w-full h-full p-1 bg-zinc-900 rounded-xl"
+            >
+                <img 
+                    src={project.image} 
+                    alt={project.title} 
+                    // Added scale transition for the background image
+                    className="absolute inset-0 w-full h-full object-cover opacity-30 group-hover:opacity-50 group-hover:scale-110 transition-all duration-700 ease-in-out" 
+                />
+                
+                {/* --- ✨ NEW: Shine Effect --- */}
+                <div className="absolute top-0 left-[-100%] h-full w-1/2 bg-gradient-to-r from-transparent via-white/10 to-transparent group-hover:left-[100%] transition-all duration-700 ease-in-out" />
 
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent" />
+
+                <div className="relative p-6 flex flex-col justify-end h-full">
+                    <div>
+                        <span className={`inline-block px-3 py-1 text-xs rounded-full mb-2 ${project.featured ? 'bg-blue-500/20 text-blue-300' : 'bg-zinc-700/50 text-zinc-300'}`}>
+                            {project.category}
+                        </span>
+                        <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">{project.title}</h3>
+                        <p className="text-zinc-400 text-sm leading-relaxed mb-4 line-clamp-3">{project.description}</p>
+                    </div>
+                    <div className="flex items-center gap-2 text-white font-semibold text-sm mt-4 opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+                        View Details <FaArrowRight />
+                    </div>
+                </div>
+            </motion.div>
+        </motion.div>
+    );
+});
+
+// --- MAIN COMPONENT ---
+const Projects = () => {
+    const [activeFilter, setActiveFilter] = useState("All");
+    const [selectedProject, setSelectedProject] = useState(null);
+
+    const categories = useMemo(() => ["All", ...Array.from(new Set(projects.map(p => p.category)))], []);
+    const filteredProjects = useMemo(
+        () => activeFilter === "All" ? projects : projects.filter((p) => p.category === activeFilter),
+        [activeFilter]
+    );
+
+    return (
+        <>
+            <section id="projects" className="py-24 bg-black text-white">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
+                    <div className="text-center max-w-3xl mx-auto">
+                        <h2 className="text-base font-semibold text-blue-400 tracking-wider uppercase">My Work</h2>
+                        <p className="mt-2 text-4xl md:text-5xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-zinc-100 to-zinc-400">
+                            Engineered with Purpose, Designed for Impact.
+                        </p>
+                    </div>
+
+                    <div className="flex items-center justify-center">
+                        <div className="flex space-x-1 border border-zinc-800 bg-zinc-900 rounded-full p-1.5 overflow-x-auto">
+                            {categories.map((category) => (
+                                <button
+                                    key={category}
+                                    onClick={() => setActiveFilter(category)}
+                                    className={`relative px-4 py-2 text-sm font-semibold rounded-full transition-colors duration-300 whitespace-nowrap ${
+                                        activeFilter === category ? "text-white" : "text-zinc-400 hover:text-white"
+                                    }`}
+                                >
+                                    {activeFilter === category && (
+                                        <motion.div layoutId="active-pill" className="absolute inset-0 bg-blue-600/50 rounded-full" transition={{ type: "spring", stiffness: 300, damping: 30 }}/>
+                                    )}
+                                    <span className="relative z-10 capitalize">{category}</span>
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    <motion.div layout className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <AnimatePresence>
+                            {filteredProjects.map((project) => (
+                                <ProjectCard key={project.id} project={project} onCardClick={setSelectedProject} />
+                            ))}
+                        </AnimatePresence>
+                    </motion.div>
+                </div>
+            </section>
+            
+            <ProjectModal project={selectedProject} onClose={() => setSelectedProject(null)} />
+        </>
+    );
+};
+
+// --- PROP TYPES (FOR JAVASCRIPT) ---
+ProjectModal.propTypes = {
+    project: PropTypes.object,
+    onClose: PropTypes.func.isRequired,
+};
+ProjectCard.propTypes = {
+    project: PropTypes.object.isRequired,
+    onCardClick: PropTypes.func.isRequired,
+};
+ProjectCard.displayName = "ProjectCard";
+
+export default Projects;

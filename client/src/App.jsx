@@ -99,11 +99,48 @@ function App() {
       </main>
 
       {/* Footer - Last priority */}
-      <Suspense fallback={
+      {/* <Suspense fallback={
         <div className="h-32 bg-zinc-900/50 border-t border-zinc-800 animate-pulse" />
       }>
         <Footer />
-      </Suspense>
+      </Suspense> */}
+      <div className="relative z-10">
+        <Suspense fallback={
+          <div className="h-32 bg-zinc-900/50 border-t border-zinc-800 animate-pulse" />
+        }>
+          <Footer />
+        </Suspense>
+      </div>
+
+      {/* Scroll to top button */}
+      <div className="fixed bottom-6 right-6 md:bottom-8 md:right-8">
+        <button
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          className="p-3 bg-zinc-800/60 hover:bg-zinc-800/80 text-zinc-400 hover:text-white rounded-full shadow-lg backdrop-blur-md transition-colors"
+          aria-label="Scroll to top"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+          </svg>
+        </button>
+      </div>
+
+      {/* Performance optimization: Preload key fonts */}
+      <link
+        rel="preload"
+        href="/fonts/Inter-VariableFont_slnt,wght.ttf"
+        as="font"
+        type="font/ttf"
+        crossOrigin="anonymous"
+      />
+      <link
+        rel="preload"
+        href="/fonts/JetBrainsMono-VariableFont_wght.ttf"
+        as="font"
+        type="font/ttf"
+        crossOrigin="anonymous"
+      />  
+      
     </div>
   );
 }

@@ -5,9 +5,9 @@ const Hero = () => {
   const [currentRole, setCurrentRole] = useState(0);
 
   const roles = [
-    "Frontend Developer",
-    "UI/UX Designer",
-    "Digital Craftsman",
+    "Expert Frontend Engineer",
+    "User-Centric UI/UX Designer",
+    "Digital Product Strategist",
     "Creative Technologist",
   ];
 
@@ -16,7 +16,7 @@ const Hero = () => {
       setCurrentRole((prev) => (prev + 1) % roles.length);
     }, 4000);
     return () => clearInterval(interval);
-  }, []);
+  }, [roles.length]);
 
   // Navigation functions
   const scrollToSection = (sectionId) => {
@@ -55,11 +55,12 @@ const Hero = () => {
           }}
         />
         
-        {/* Premium grain texture */}
+        {/* Premium grain texture - More performant version */}
         <div 
-          className="absolute inset-0 opacity-[0.02] mix-blend-overlay"
+          className="absolute inset-0 opacity-[0.03] mix-blend-soft-light"
           style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='5' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
+            backgroundImage: `url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwBAMAAAClLOS0AAAAElBMVEUAAAD8/vz8/vz8/vz8/vz8/vz8/vwhc3sVAAAABnRSTlMAAAAAAGS0cfgAAAAtSURBVDjLY2CgDmB8+vQZGJoPjB8Mh24YoYELo38ABgYjBfABAPM5Axw24/3dAAAAAElFTkSuQmCC')`,
+            backgroundRepeat: 'repeat'
           }}
         />
         
@@ -174,8 +175,8 @@ const Hero = () => {
             <span className="relative z-10 flex items-center gap-3">
               Start Elite Project
               <motion.span
-                animate={{ x: [0, 5, 0] }}
-                transition={{ duration: 2, repeat: Infinity }}
+                animate={{ x: [0, 3, 0] }}
+                transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
                 className="text-lg"
               >
                 →
@@ -196,13 +197,9 @@ const Hero = () => {
             <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             <span className="relative z-10 flex items-center gap-3">
               View Projects
-              <motion.span
-                animate={{ rotate: [0, 360] }}
-                transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
-                className="text-lg"
-              >
+              <span className="text-lg">
                 ✦
-              </motion.span>
+              </span>
             </span>
           </motion.button>
         </motion.div>
@@ -220,7 +217,7 @@ const Hero = () => {
             fontWeight: 600,
           }}
         >
-          MMXXV
+          MMXXIV
         </motion.span>
       </div>
     </section>
