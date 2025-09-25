@@ -48,12 +48,17 @@ export default defineConfig({
     }
   },
 
-  server: {
-    hmr: {
-      overlay: false
+    server: {
+    port: 5173,
+    open: true,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:5000',
+        changeOrigin: true
+      }
     }
   },
-
+  
   css: {
     devSourcemap: false,
     preprocessorOptions: {
